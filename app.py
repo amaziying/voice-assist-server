@@ -1,9 +1,13 @@
 import json
 from flask import Flask, request, jsonify
-from watson_developer_cloud import AlchemyLanguageV1
+from watson_developer_cloud import NaturalLanguageUnderstandingV1
+import watson_developer_cloud.natural_language_understanding.features.v1 as features
 
 app = Flask('Voice assist app')
-alchemy_language = AlchemyLanguageV1(api_key='cddea2ac5896fad34230018d6b70ec134c26ceeb')
+natural_language_understanding = NaturalLanguageUnderstandingV1(
+    version='2017-02-17',
+    username='632402de-fa93-4f20-ab17-0b8b8ccad28e',
+    password='VQdbAVLmc1sI')
 
 @app.route('/')
 def hello_world():
@@ -14,15 +18,8 @@ def request_handler():
     data = request.get_json()
     text = data['transcription']
 
-    response = alchemy_language.keywords(text=text)
-    keywords = map(lambda x: x['text'], response['keywords'])
-
-    if len(keywords) > 0:
-        sentiment = alchemy_language.targeted_sentiment(text=text,
-                                                        targets=keywords,
-                                                        language='english')
-        result = sentiment['results']
-    else:
-        result = []
+    result = natural_language_understanding.analyze(
+        text=text,
+        features=[features.Keywords(), features.Sentiment()])
 
     return jsonify({'result': result})
