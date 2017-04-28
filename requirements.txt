@@ -1,3 +1,4 @@
 Flask==0.12
 watson-developer-cloud==0.25.2
 gunicorn
+psycopg2
