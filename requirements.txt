@@ -1,2 +1,2 @@
 Flask==0.12
-watson-developer-cloud==0.24.0
+watson-developer-cloud==0.25.2
