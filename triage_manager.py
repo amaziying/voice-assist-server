@@ -4,7 +4,7 @@ import urlparse
 import psycopg2
 
 # TODO: Move constants to DB/cache
-high_p = ['pain', 'hurt', 'hurts', 'medicine', 'nausea', 'nauseous', 'dizzy', 'die', 'dying', 'death']
+high_p = ['pain', 'hurt', 'hurts', 'medicine', 'nausea', 'nauseous', 'dizzy', 'die', 'dying', 'death', 'stitches', 'blood', 'bleeding', 'stitch', 'cast']
 med_p = ['washroom', 'bathroom', 'toilet', 'uncomfortable']
 low_p = ['water', 'food', 'ice', 'blanket', 'pillow', 'bed', 'adjust']
 
