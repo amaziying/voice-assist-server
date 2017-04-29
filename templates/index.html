@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="viewport" content="width=device-width"/>
+    	<title>Voice Assist</title>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="static/js/app.js"></script>
+        <script src="static/js/mainService.js"></script>
+        <script src="static/js/mainController.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+   	</head>
+    <body ng-app="app" ng-controller="mainController">
+        <div class="row" ng-repeat="request in requests">
+
+            <div class="col-md-2">
+            {{request.id}} {{request.transcription}}
+            </div>
+        </div>
+	</body>
+
+</html>

@@ -18,6 +18,23 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+columns = [
+    'id',
+    'patient_id',
+    'ts_request',
+    'ts_pickup',
+    'ts_close',
+    'transcription',
+    'status',
+    'priority_score',
+]
+
+def annotate_columns(row):
+    row_dict = {}
+    for i, val in enumerate(row):
+        row_dict[columns[i]] = val
+
+    return row_dict
 
 def get_keyword_score(score, keyword):
     weight = 1
@@ -57,7 +74,7 @@ def get_active_requests():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
-    return result
+    return map(annotate_columns, result)
 
 def get_closed_requests():
     result = []
@@ -69,7 +86,7 @@ def get_closed_requests():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
-    return result
+    return map(annotate_columns, result)
 
 def pickup_request(id):
     try:
