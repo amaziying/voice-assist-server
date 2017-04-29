@@ -17,8 +17,14 @@
     <body ng-app="app" ng-controller="mainController">
         <div class="row" ng-repeat="request in requests">
 
-            <div class="col-md-2">
-            {{request.id}} {{request.transcription}}
+            <div class="col-lg-8">
+                <h3>{{request.transcription}}</h3>
+                <h5>{{request.status}} SINCE {{request.status === 'OPEN' ? request.ts_request : request.ts_pickup}}</h5>
+                <h5>PATIENT: {{request.patient_id}}</h5>
+                <h5>ROOM: 1</h5>
+            </div>
+            <div class="col-lg-4">
+                <button ng-click="requestAction(request.id)">{{request.status === 'OPEN' ? 'ACCEPT REQUEST' : 'COMPLETE REQUEST'}}</button>
             </div>
         </div>
 	</body>

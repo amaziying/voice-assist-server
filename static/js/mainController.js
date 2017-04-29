@@ -1,13 +1,18 @@
-app.controller('mainController', ['$scope', '$timeout', 'requestService', function ($scope, $timeout, requests) {
+app.controller('mainController', ['$scope', 'requestService', function ($scope, requestService) {
 	$scope.requests = [];
 
-	function poll() {
-		requests.fetch().then(function (response) {
-			$scope.requests = response.data.result;
-		}, function (err) {
-			console.log(err);
-		});
-		$timeout(poll, 1000);
-	}
-	poll();
+	$scope.requestAction = function (id) {
+		const request = $scope.requests.find(r => r.id === id);
+		if (!request) return;
+
+		if (request.status === 'OPEN') {
+			requestService.pickup(id);
+		} else if (request.status === 'INPROGRESS') {
+			requestService.close(id);
+		}
+	};
+
+	requestService.subscribe(function (newList) {
+		$scope.requests = newList;
+	});
 }]);
