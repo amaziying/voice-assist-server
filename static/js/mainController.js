@@ -15,10 +15,9 @@ app.controller('mainController', ['$scope', 'requestService', function ($scope, 
     requestService.subscribe(function (newList) {
         newList.map(item => {
             if (item.status === 'OPEN') {
-                console.log(item.ts_request);
-                item.prettyStatus = 'OPEN SINCE ' + moment(item.ts_request.substring(0, item.ts_request.length - 4)).format('h:mm A')
+                item.prettyStatus = 'OPEN SINCE ' + moment(item.ts_request).format('h:mm A')
             } else if (item.status === 'INPROGRESS') {
-                item.prettyStatus = 'IN PROGRESS SINCE ' + moment(item.ts_pickup.substring(0, item.ts_request.length - 4)).format('h:mm A')
+                item.prettyStatus = 'IN PROGRESS SINCE ' + moment(item.ts_pickup).format('h:mm A')
             }
             return item;
         })
