@@ -92,7 +92,7 @@ def pickup_request(id):
     try:
         cur = conn.cursor()
         cur.execute(
-            """UPDATE Requests SET status=%s, ts_pickup=CURRENT_TIMESTAMP WHERE id=%s """,
+            """UPDATE Requests SET status=%s, ts_pickup=LOCALTIMESTAMP WHERE id=%s """,
             ('INPROGRESS', id))
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -102,7 +102,7 @@ def close_request(id):
     try:
         cur = conn.cursor()
         cur.execute(
-            """UPDATE Requests SET status=%s, ts_close=CURRENT_TIMESTAMP WHERE id=%s """,
+            """UPDATE Requests SET status=%s, ts_close=LOCALTIMESTAMP WHERE id=%s """,
             ('CLOSED', id))
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
