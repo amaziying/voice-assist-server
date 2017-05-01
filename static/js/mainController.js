@@ -19,6 +19,9 @@ app.controller('mainController', ['$scope', 'requestService', function ($scope, 
             } else if (item.status === 'INPROGRESS') {
                 item.prettyStatus = 'IN PROGRESS SINCE ' + moment(item.ts_pickup).format('h:mm A')
             }
+            if (!item.name) {
+                item.name = item.patient_id;
+            }
             return item;
         })
         $scope.requests = newList;

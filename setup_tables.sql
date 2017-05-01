@@ -10,3 +10,9 @@ CREATE TABLE Requests (
     status varchar(10) CHECK (status = 'OPEN' OR status = 'INPROGRESS' OR status = 'CLOSED'),
     priority_score real
 );
+
+CREATE TABLE Patients (
+	id varchar(50) NOT NULL PRIMARY KEY,
+	name text,
+	room_no varchar(10)
+);

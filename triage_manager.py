@@ -4,8 +4,8 @@ import urlparse
 import psycopg2
 
 # TODO: Move constants to DB/cache
-high_p = ['pain', 'hurt', 'hurts', 'medicine', 'nausea', 'nauseous', 'dizzy', 'die', 'dying', 'death', 'stitches', 'blood', 'bleeding', 'stitch', 'cast']
-med_p = ['washroom', 'bathroom', 'toilet', 'uncomfortable']
+high_p = ['pain', 'hurt', 'hurts', 'die', 'dying', 'death', 'stitches', 'blood', 'bleeding', 'bleed' 'stitch', 'cast']
+med_p = ['washroom', 'bathroom', 'toilet', 'uncomfortable', 'nausea', 'nauseous', 'dizzy', 'medicine', 'cold', 'cough']
 low_p = ['water', 'food', 'ice', 'blanket', 'pillow', 'bed', 'adjust']
 
 # Connect to PostgreSQL DB
@@ -27,6 +27,9 @@ columns = [
     'transcription',
     'status',
     'priority_score',
+    'patient_id1',
+    'name',
+    'room_no',
 ]
 
 def annotate_columns(row):
@@ -47,14 +50,31 @@ def get_keyword_score(score, keyword):
 
     return score + weight*keyword['relevance']
 
-def get_priority_score(sentiment, keywords):
-    keyword_score = reduce(get_keyword_score, keywords, 1)
+def get_manual_score(text):
+    score = 0
+    for word in text.split(' '):
+        lower_word = word.lower()
+        if lower_word in high_p:
+            score = score + 3
+        elif lower_word in med_p:
+            score = score + 2
+        elif lower_word in low_p:
+            score = score + 1
+    return score
+
+def get_priority_score(sentiment, keywords, text):
+    score = reduce(get_keyword_score, keywords, 1) + get_manual_score(text)
+
     sentiment_adjustment = 1 + abs(sentiment['score']) if sentiment['label'] == 'negative' else 1
     
     return keyword_score*sentiment_adjustment
 
+
 def enqueue(patient_id, text, result):
-    score = get_priority_score(result['sentiment']['document'], result['keywords'])
+    score = get_priority_score(result['sentiment']['document'], result['keywords'], text)
+    if text == 'This is an emergency':
+        score = 9999
+
     try:
         cur = conn.cursor()
         cur.execute(
@@ -69,7 +89,7 @@ def get_active_requests():
 
     try:
         cur = conn.cursor()
-        cur.execute("""SELECT * FROM Requests WHERE status<>%s ORDER BY priority_score DESC """, ('CLOSED',))
+        cur.execute("""SELECT * FROM Requests LEFT OUTER JOIN Patients ON (Requests.patient_id = Patients.id) WHERE status<>%s ORDER BY priority_score DESC """, ('CLOSED',))
         result = cur.fetchall()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
