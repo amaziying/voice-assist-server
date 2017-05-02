@@ -4,9 +4,9 @@ import urlparse
 import psycopg2
 
 # TODO: Move constants to DB/cache
-high_p = ['pain', 'hurt', 'hurts', 'die', 'dying', 'death', 'stitches', 'blood', 'bleeding', 'bleed' 'stitch', 'cast']
-med_p = ['washroom', 'bathroom', 'toilet', 'uncomfortable', 'nausea', 'nauseous', 'dizzy', 'medicine', 'cold', 'cough']
-low_p = ['water', 'food', 'ice', 'blanket', 'pillow', 'bed', 'adjust']
+high_p = ['pain', 'hurt', 'hurts', 'die', 'dying', 'death', 'stitches', 'blood', 'bleeding', 'bleed' 'stitch', 'cast', 'chest', 'hurting']
+med_p = ['washroom', 'bathroom', 'toilet', 'uncomfortable', 'nausea', 'nauseous', 'dizzy', 'medicine', 'cold', 'cough', 'throw', 'headache', 'coughing', 'coughed', 'cramp', 'ache', 'stomach', 'belly', 'wound', 'wounded', 'back', 'sore', 'strain']
+low_p = ['water', 'food', 'ice', 'juice', 'snacks', 'meal', 'breakfast', 'lunch', 'dinner', 'blanket', 'pillow', 'bed', 'adjust', 'security', 'discharge']
 
 # Connect to PostgreSQL DB
 urlparse.uses_netloc.append("postgres")
