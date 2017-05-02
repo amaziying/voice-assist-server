@@ -70,8 +70,9 @@ def get_priority_score(sentiment, keywords, text):
     return keyword_score*sentiment_adjustment
 
 
-def enqueue(patient_id, text, result):
-    score = get_priority_score(result['sentiment']['document'], result['keywords'], text)
+def enqueue(patient_id, text):
+    # score = get_priority_score(result['sentiment']['document'], result['keywords'], text)
+    score = get_manual_score(text)
     if text == 'This is an emergency':
         score = 9999
 

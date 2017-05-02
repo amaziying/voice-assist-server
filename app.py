@@ -1,7 +1,7 @@
 import json
 
 from flask import Flask, request, jsonify, render_template
-from watson_developer_cloud import NaturalLanguageUnderstandingV1
+from watson_developer_cloud import NaturalLanguageUnderstandingV1, WatsonException
 import watson_developer_cloud.natural_language_understanding.features.v1 as features
 
 from triage_manager import enqueue, get_active_requests, get_closed_requests, pickup_request, close_request
@@ -27,8 +27,8 @@ app = create_app()
 # Connect to IBM Watson
 natural_language_understanding = NaturalLanguageUnderstandingV1(
     version='2017-02-17',
-    username='632402de-fa93-4f20-ab17-0b8b8ccad28e',
-    password='VQdbAVLmc1sI')
+    username='db82f953-b1f4-452e-a3ca-739198a3178b',
+    password='FFa7SWq7AThH')
 
 watson_cache = {}
 
@@ -41,14 +41,18 @@ def open_request():
     data = request.get_json()
     text = data['transcription']
     patient_id = data['patient_id']
+    # if text not in watson_cache:
+    #     try:
+    #         watson_cache[text] = natural_language_understanding.analyze(
+    #             text=text,
+    #             features=[features.Keywords(), features.Sentiment()])
+    #     except WatsonException as err:
+    #         print err
+    # enqueue(patient_id, text, watson_cache[text])
+    # return jsonify({'result': watson_cache[text]})
 
-    if text not in watson_cache:
-        watson_cache[text] = natural_language_understanding.analyze(
-            text=text,
-            features=[features.Keywords(), features.Sentiment()])
-
-    enqueue(patient_id, text, watson_cache[text])
-    return jsonify({'result': watson_cache[text]})
+    enqueue(patient_id, text)
+    return jsonify({})
 
 @app.route('/api/requests', methods=['GET'])
 def list_requests():
