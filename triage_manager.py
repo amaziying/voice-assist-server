@@ -18,6 +18,8 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+
+# Labeling the columns
 columns = [
     'id',
     'patient_id',
@@ -50,29 +52,17 @@ def get_keyword_score(score, keyword):
 
     return score + weight*keyword['relevance']
 
-def get_manual_score(text):
-    score = 0
-    for word in text.split(' '):
-        lower_word = word.lower()
-        if lower_word in high_p:
-            score = score + 3
-        elif lower_word in med_p:
-            score = score + 2
-        elif lower_word in low_p:
-            score = score + 1
-    return score
 
 def get_priority_score(sentiment, keywords, text):
-    score = reduce(get_keyword_score, keywords, 1) + get_manual_score(text)
+    score = reduce(get_keyword_score, keywords, 1)
 
     sentiment_adjustment = 1 + abs(sentiment['score']) if sentiment['label'] == 'negative' else 1
     
     return keyword_score*sentiment_adjustment
 
+def enqueue(patient_id, text, result):
+    score = get_priority_score(result['sentiment']['document'], result['keywords'], text)
 
-def enqueue(patient_id, text):
-    # score = get_priority_score(result['sentiment']['document'], result['keywords'], text)
-    score = get_manual_score(text)
     if text == 'This is an emergency':
         score = 9999
 

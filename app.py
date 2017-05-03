@@ -41,18 +41,16 @@ def open_request():
     data = request.get_json()
     text = data['transcription']
     patient_id = data['patient_id']
-    # if text not in watson_cache:
-    #     try:
-    #         watson_cache[text] = natural_language_understanding.analyze(
-    #             text=text,
-    #             features=[features.Keywords(), features.Sentiment()])
-    #     except WatsonException as err:
-    #         print err
-    # enqueue(patient_id, text, watson_cache[text])
-    # return jsonify({'result': watson_cache[text]})
+    if text not in watson_cache:
+        try:
+            watson_cache[text] = natural_language_understanding.analyze(
+                text=text,
+                features=[features.Keywords(), features.Sentiment()])
+        except WatsonException as err:
+            print err
+    enqueue(patient_id, text, watson_cache[text])
+    return jsonify({'result': watson_cache[text]})
 
-    enqueue(patient_id, text)
-    return jsonify({})
 
 @app.route('/api/requests', methods=['GET'])
 def list_requests():
